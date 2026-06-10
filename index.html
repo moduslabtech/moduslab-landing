@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Modus Lab — Precision engineering tools</title>
+<meta name="description" content="Modus Lab builds focused software tools for mechanical and precision engineers." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --paper:#F6F2EA; --surface:#FFFFFF; --surface-soft:#FBF9F4;
+    --border-1:#ECE6D7; --border-2:#DDD5BF;
+    --ink-1:#141312; --ink-2:#4A4640; --ink-3:#7A7468; --ink-4:#A39C8E;
+    --accent:#C2410C; --accent-soft:#FDF1E7; --accent-line:#F0CDB1;
+    --green:#15803D; --menu:#1A1815;
+    --font-display:"Instrument Serif","Times New Roman",serif;
+    --font-ui:-apple-system,ui-sans-serif,system-ui,sans-serif;
+    --r-2:7px; --r-3:10px; --r-4:14px; --r-pill:999px;
+  }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  html { -webkit-font-smoothing:antialiased; scroll-behavior:smooth; }
+  body { font-family:var(--font-ui); background:var(--paper); color:var(--ink-1); line-height:1.5; min-height:100vh; }
+  a { text-decoration:none; color:inherit; }
+  .wrap { max-width:1000px; margin:0 auto; padding:0 28px; }
+
+  /* ── Sticky header with dropdown nav ────────────────────────────── */
+  header {
+    position:sticky; top:0; z-index:50;
+    background:rgba(246,242,234,0.82); backdrop-filter:saturate(140%) blur(10px);
+    border-bottom:1px solid var(--border-1);
+  }
+  .nav { display:flex; align-items:center; justify-content:space-between; height:64px; }
+  .brand { display:inline-flex; align-items:center; gap:11px; }
+  .brand-mark { display:grid; gap:2px; }
+  .brand-mark span { display:block; border-radius:2px; }
+  .brand-mark .b1 { width:26px; height:7px; background:var(--accent); }
+  .brand-mark .b2 { width:21px; height:5px; background:#1A1815; margin-left:2.5px; }
+  .brand-mark .b3 { width:15px; height:4px; background:var(--ink-4); margin-left:5.5px; }
+  .brand-name { font-family:var(--font-display); font-size:22px; letter-spacing:-0.01em; }
+
+  .nav-right { display:flex; align-items:center; gap:6px; }
+  .nav-link {
+    font-size:14px; font-weight:500; color:var(--ink-2); padding:8px 14px;
+    border-radius:var(--r-2); transition:background .14s, color .14s; cursor:pointer;
+    display:inline-flex; align-items:center; gap:6px; background:none; border:none; font-family:inherit;
+  }
+  .nav-link:hover { background:var(--surface-soft); color:var(--ink-1); }
+  .caret { font-size:10px; color:var(--ink-3); transition:transform .18s ease; }
+
+  /* Dropdown (pure CSS: hover on desktop, focus-within for keyboard/touch) */
+  .menu-item { position:relative; }
+  .mega {
+    position:absolute; top:calc(100% + 10px); right:0;
+    width:560px; max-width:calc(100vw - 40px);
+    background:var(--menu); color:#fff; border-radius:var(--r-4);
+    box-shadow:0 30px 70px -30px rgba(0,0,0,0.55);
+    padding:22px; opacity:0; visibility:hidden; transform:translateY(-6px);
+    transition:opacity .16s ease, transform .16s ease, visibility .16s;
+  }
+  .menu-item:hover .mega,
+  .menu-item:focus-within .mega { opacity:1; visibility:visible; transform:translateY(0); }
+  .menu-item:hover .caret,
+  .menu-item:focus-within .caret { transform:rotate(180deg); }
+
+  .mega-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px 24px; }
+  .mega-cat {
+    grid-column:1 / -1; font-size:11px; font-weight:700; letter-spacing:0.09em;
+    text-transform:uppercase; color:#8C857A; margin:6px 2px 2px;
+  }
+  .mega-link { display:flex; gap:11px; align-items:flex-start; padding:9px 10px; border-radius:var(--r-3); transition:background .14s; }
+  .mega-link:hover { background:rgba(255,255,255,0.06); }
+  .mega-link.soon { opacity:0.5; cursor:default; }
+  .mega-link.soon:hover { background:none; }
+  .mega-ic {
+    width:34px; height:34px; flex:none; border-radius:var(--r-2); display:grid; place-items:center;
+    background:linear-gradient(135deg,#3a2a1d,#5a3d27); color:#F0CDB1; font-size:16px;
+  }
+  .mega-tt { font-size:14px; font-weight:600; color:#fff; display:flex; align-items:center; gap:8px; }
+  .mega-tt .tag { font-size:9px; font-weight:700; letter-spacing:.04em; padding:1px 6px; border-radius:var(--r-pill); }
+  .tag-live { background:#0f3d27; color:#5fd699; }
+  .tag-soon { background:#2a2722; color:#8C857A; }
+  .mega-ds { font-size:12px; color:#9a9286; line-height:1.45; margin-top:2px; }
+  .mega-foot { border-top:1px solid rgba(255,255,255,0.08); margin-top:14px; padding-top:12px; }
+  .mega-foot a { font-size:13px; color:#F0CDB1; font-weight:500; }
+
+  .btn-primary {
+    background:var(--accent); color:#fff; font-size:14px; font-weight:550;
+    padding:9px 18px; border-radius:var(--r-2);
+    box-shadow:0 6px 18px -8px rgba(194,65,12,0.5); transition:transform .14s;
+  }
+  .btn-primary:hover { transform:translateY(-1px); }
+
+  /* ── Hero ───────────────────────────────────────────────────────── */
+  .hero { padding:72px 0 36px; }
+  .eyebrow {
+    display:inline-block; font-size:11.5px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase;
+    color:var(--accent); background:var(--accent-soft); border:1px solid var(--accent-line);
+    padding:4px 11px; border-radius:var(--r-pill); margin-bottom:20px;
+  }
+  h1 { font-family:var(--font-display); font-weight:400; font-size:54px; line-height:1.04; letter-spacing:-0.02em; max-width:680px; margin-bottom:16px; }
+  h1 em { font-style:italic; color:var(--accent); }
+  .lede { font-size:16px; color:var(--ink-2); max-width:540px; line-height:1.6; }
+
+  /* ── Tools grid ─────────────────────────────────────────────────── */
+  .tools-head { display:flex; align-items:baseline; gap:12px; margin:52px 0 16px; padding-bottom:12px; border-bottom:1px solid var(--border-1); }
+  .tools-head h2 { font-family:var(--font-display); font-weight:400; font-size:23px; }
+  .tools-head span { font-size:13px; color:var(--ink-3); }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:16px; }
+  .card { display:flex; flex-direction:column; background:var(--surface); border:1px solid var(--border-1); border-radius:var(--r-4); padding:22px 22px 20px; transition:transform .16s, box-shadow .16s, border-color .16s; }
+  .card.live:hover { transform:translateY(-3px); box-shadow:0 18px 40px -22px rgba(20,19,18,0.35); border-color:var(--border-2); }
+  .card-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
+  .card-icon { width:42px; height:42px; border-radius:var(--r-3); display:grid; place-items:center; background:linear-gradient(135deg,#FDF1E7,#F0CDB1); border:1px solid var(--accent-line); color:var(--accent); font-size:20px; }
+  .pill { font-size:10.5px; font-weight:700; letter-spacing:0.05em; text-transform:uppercase; padding:3px 10px; border-radius:var(--r-pill); }
+  .pill-live { background:#ECFDF5; color:var(--green); border:1px solid #BBF7D0; }
+  .pill-soon { background:var(--surface-soft); color:var(--ink-4); border:1px solid var(--border-2); }
+  .card h3 { font-family:var(--font-display); font-weight:400; font-size:22px; margin-bottom:6px; }
+  .card p { font-size:13.5px; color:var(--ink-3); line-height:1.55; flex:1; }
+  .card-cta { margin-top:16px; font-size:13px; font-weight:550; color:var(--accent); display:inline-flex; align-items:center; gap:6px; }
+  .card.soon { opacity:0.72; }
+  .card.soon .card-icon { background:var(--surface-soft); border-color:var(--border-1); color:var(--ink-4); }
+  .card.soon .card-cta { color:var(--ink-4); }
+
+  footer { margin-top:64px; padding:28px 0 40px; border-top:1px solid var(--border-1); font-size:12.5px; color:var(--ink-4); display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px; }
+  footer a:hover { color:var(--accent); }
+
+  @media (max-width:600px) {
+    h1 { font-size:38px; } .hero { padding:48px 0 28px; }
+    .mega { width:calc(100vw - 40px); }
+    .mega-grid { grid-template-columns:1fr; }
+    .nav-link.text-link { display:none; }
+  }
+</style>
+</head>
+<body>
+  <!-- ════ HEADER / NAV ════ -->
+  <header>
+    <div class="wrap nav">
+      <a class="brand" href="/">
+        <span class="brand-mark" aria-hidden="true"><span class="b3"></span><span class="b2"></span><span class="b1"></span></span>
+        <span class="brand-name">Modus&nbsp;Lab</span>
+      </a>
+
+      <nav class="nav-right">
+        <!-- ▼ TOOLS DROPDOWN — add a new .mega-link per tool, grouped by category -->
+        <div class="menu-item">
+          <button class="nav-link" aria-haspopup="true">Tools <span class="caret">▼</span></button>
+          <div class="mega" role="menu">
+            <div class="mega-grid">
+
+              <div class="mega-cat">Tolerance &amp; GD&amp;T</div>
+              <a class="mega-link" href="https://stacksense.moduslab.in/" role="menuitem">
+                <span class="mega-ic">📐</span>
+                <span>
+                  <span class="mega-tt">StackSense <span class="tag tag-live">LIVE</span></span>
+                  <span class="mega-ds">Axial, radial &amp; angular tolerance stack-ups with GD&amp;T, RSS &amp; Monte Carlo.</span>
+                </span>
+              </a>
+              <a class="mega-link soon" role="menuitem" aria-disabled="true">
+                <span class="mega-ic">⊕</span>
+                <span>
+                  <span class="mega-tt">FitFinder <span class="tag tag-soon">SOON</span></span>
+                  <span class="mega-ds">ISO 286 limits &amp; fits selector for shafts and holes.</span>
+                </span>
+              </a>
+
+              <div class="mega-cat">Thermal &amp; Fluids</div>
+              <a class="mega-link soon" role="menuitem" aria-disabled="true">
+                <span class="mega-ic">♨</span>
+                <span>
+                  <span class="mega-tt">ThermoDesk <span class="tag tag-soon">SOON</span></span>
+                  <span class="mega-ds">Heat-exchanger &amp; refrigeration cycle calculators.</span>
+                </span>
+              </a>
+            </div>
+            <div class="mega-foot"><a href="#tools">View all tools →</a></div>
+          </div>
+        </div>
+
+        <a class="nav-link text-link" href="#tools">About</a>
+        <a class="btn-primary" href="https://stacksense.moduslab.in/">Open StackSense</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <!-- ════ HERO ════ -->
+    <section class="hero">
+      <span class="eyebrow">Precision engineering tools</span>
+      <h1>Focused tools for engineers who measure in <em>microns.</em></h1>
+      <p class="lede">
+        Modus Lab builds small, sharp software for mechanical and precision
+        engineering — analysis you can trust in a design review, without the
+        weight of a full CAD suite.
+      </p>
+    </section>
+
+    <!-- ════ TOOLS GRID ════ -->
+    <div class="tools-head" id="tools">
+      <h2>Tools</h2><span>One job each, done well.</span>
+    </div>
+
+    <div class="grid">
+      <!-- LIVE: StackSense — copy this block for each new live tool -->
+      <a class="card live" href="https://stacksense.moduslab.in/">
+        <div class="card-top"><div class="card-icon">📐</div><span class="pill pill-live">● Live</span></div>
+        <h3>StackSense</h3>
+        <p>Tolerance stack-up analysis — axial, radial and angular chains with GD&amp;T as a first-class input, RSS &amp; Monte Carlo, and a plain-English recommendation for which component to tighten first.</p>
+        <span class="card-cta">Open StackSense →</span>
+      </a>
+
+      <!-- SOON placeholder — duplicate & rename for upcoming tools -->
+      <div class="card soon" aria-disabled="true">
+        <div class="card-top"><div class="card-icon">⊕</div><span class="pill pill-soon">Soon</span></div>
+        <h3>FitFinder</h3>
+        <p>ISO 286 limits &amp; fits selector — pick a clearance, transition or interference fit and get the exact shaft/hole tolerances and resulting play.</p>
+        <span class="card-cta">Coming soon</span>
+      </div>
+
+      <div class="card soon" aria-disabled="true">
+        <div class="card-top"><div class="card-icon">♨</div><span class="pill pill-soon">Soon</span></div>
+        <h3>ThermoDesk</h3>
+        <p>Heat-exchanger and refrigeration-cycle calculators with real fluid properties — sized for quick design-review checks.</p>
+        <span class="card-cta">Coming soon</span>
+      </div>
+    </div>
+
+    <footer>
+      <span>© <span id="yr"></span> Modus Lab</span>
+      <span><a href="mailto:hello@moduslab.in">hello@moduslab.in</a></span>
+    </footer>
+  </div>
+  <script>document.getElementById("yr").textContent = new Date().getFullYear();</script>
+</body>
+</html>
